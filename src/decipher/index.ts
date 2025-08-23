@@ -9,20 +9,31 @@ const decipher = (
   input: PathLike,
   output: PathLike
 ) => {
-  const decipher = crypto.createDecipheriv(
-    `aes-${size}-cbc`,
-    new Uint8Array(crypto.scryptSync(password, salt, size / 8)),
-    new Uint8Array(16)
-  );
-
-  pipeline(
-    createReadStream(input),
-    decipher,
-    createWriteStream(output),
-    (err) => {
-      if (err) throw err;
+  const inputStream = createReadStream(input);
+  const outputStream = createWriteStream(output);
+  
+  // Leer los primeros 16 bytes como IV
+  inputStream.once('readable', () => {
+    const iv = inputStream.read(16);
+    if (!iv) {
+      throw new Error('No se pudo leer el IV del archivo cifrado');
     }
-  );
+    
+    const decipher = crypto.createDecipheriv(
+      `aes-${size}-cbc`,
+      new Uint8Array(crypto.scryptSync(password, salt, size / 8)),
+      new Uint8Array(iv)
+    );
+
+    pipeline(
+      inputStream,
+      decipher,
+      outputStream,
+      (err) => {
+        if (err) throw err;
+      }
+    );
+  });
 };
 
 export default decipher;

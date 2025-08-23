@@ -9,16 +9,22 @@ const cipher = (
   input: PathLike,
   output: PathLike
 ) => {
+  const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(
     `aes-${size}-cbc`,
     new Uint8Array(crypto.scryptSync(password, salt, size / 8)),
-    new Uint8Array(crypto.randomBytes(16))
+    new Uint8Array(iv)
   );
+
+  const outputStream = createWriteStream(output);
+  
+  // Escribir el IV al inicio del archivo
+  outputStream.write(iv);
 
   pipeline(
     createReadStream(input),
     cipher,
-    createWriteStream(output),
+    outputStream,
     (err) => {
       if (err) throw err;
     }
