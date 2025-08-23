@@ -8,7 +8,7 @@ const hash = (
 ) => {
   return crypto
     .createHash(algorithm)
-    .update(readFileSync(input))
+    .update(readFileSync(input).toString())
     .digest(encoding);
 };
 
