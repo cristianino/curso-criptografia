@@ -10,7 +10,7 @@ const cipher = (
   output: PathLike
 ) => {
   const cipher = crypto.createCipheriv(
-    `aes-${size}-gcm`,
+    `aes-${size}-cbc`,
     new Uint8Array(crypto.scryptSync(password, salt, size / 8)),
     new Uint8Array(crypto.randomBytes(16))
   );

@@ -11,7 +11,7 @@ const decipher = (
 ) => {
   const decipher = crypto.createDecipheriv(
     `aes-${size}-cbc`,
-    crypto.scryptSync(password, salt, size / 8),
+    new Uint8Array(crypto.scryptSync(password, salt, size / 8)),
     new Uint8Array(16)
   );
 
