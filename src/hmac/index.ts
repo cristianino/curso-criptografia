@@ -8,8 +8,8 @@ const hmac = (
   input: PathLike
 ) => {
   return crypto
-    .createHmac(algorithm, Buffer.from(key))
-    .update(readFileSync(input))
+    .createHmac(algorithm, key)
+    .update(readFileSync(input).toString())
     .digest(encoding);
 };
 
