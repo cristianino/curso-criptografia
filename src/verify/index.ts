@@ -9,7 +9,7 @@ const verify = (
   signatureEncoding: crypto.BinaryToTextEncoding
 ) => {
   const verify = crypto.createVerify(algorithm);
-  verify.update(readFileSync(input));
+  verify.update(readFileSync(input).toString());
   verify.end();
   return verify.verify(readFileSync(publicKey), signature, signatureEncoding);
 };

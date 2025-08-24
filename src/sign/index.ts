@@ -9,7 +9,7 @@ const sign = (
   passphrase: string
 ) => {
   const sign = crypto.createSign(algorithm);
-  sign.update(readFileSync(input));
+  sign.update(readFileSync(input).toString());
   sign.end();
   return sign
     .sign({
