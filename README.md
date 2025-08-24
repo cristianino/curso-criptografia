@@ -36,6 +36,37 @@ yarn install
 
 ## CLI Commands
 
+### Generate random numbers/data (PRNG)
+```bash
+yarn run cli prng --type <type> [options]
+```
+
+**Types:**
+- `bytes`: Generate random bytes
+- `int`: Generate random integer
+- `uuid`: Generate UUID
+
+**Options:**
+- `--size, -s`: Size for random bytes (default: 16)
+- `--min`: Minimum value for integer (default: 0)  
+- `--max`: Maximum value for integer (default: 100)
+- `--encoding, --enc`: Output encoding (default: hex)
+
+**Examples:**
+```bash
+# Generate 32 random bytes in hex format
+yarn run cli prng --type bytes -s 32
+
+# Generate random integer between 1 and 100
+yarn run cli prng --type int --min 1 --max 100
+
+# Generate UUID
+yarn run cli prng --type uuid
+
+# Generate 16 random bytes in base64 format
+yarn run cli prng --type bytes -s 16 --enc base64
+```
+
 ### Encrypt a file
 ```bash
 yarn run cli cipher -p <password> --salt <salt> -i <input_file> -o <output_file>
