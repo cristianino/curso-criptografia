@@ -126,6 +126,69 @@ yarn run cli dh --generator 02 --priv caebb3958c5c3004ef3f60808c533f5bcd0f5bc099
 yarn run cli dh --pub <key> --priv <key> --prime <prime> --generator <gen> --enc base64
 ```
 
+### Generate asymmetric key pair
+```bash
+yarn run cli keypair --type <type> -p <passphrase> [options]
+```
+
+**Options:**
+- `--type`: Key pair type (required, choices: rsa, rsa-pss)
+- `--passphrase, -p`: Passphrase to encrypt private key (required)
+- `--outDir, -o`: Output directory (default: ./.secrets)
+- `--outFormat, -f`: Output format (default: pem, choices: pem, der)
+- `--modulusLength, -m`: Modulus length (default: 2048, choices: 2048, 3072, 4096)
+
+**Examples:**
+```bash
+# Generate RSA key pair (saves to .secrets/ by default)
+yarn run cli keypair --type rsa -p mypassphrase
+
+# Generate with custom directory and modulus length
+yarn run cli keypair --type rsa -p mypassphrase -o ./keys -m 4096
+```
+
+### Sign a file
+```bash
+yarn run cli sign -i <input_file> --priv <private_key> [options]
+```
+
+**Options:**
+- `--input, -i`: File to sign (required)
+- `--privateKey, --priv`: Private key file to sign with (required)
+- `--algorithm, -a`: Signature algorithm (default: RSA-SHA256)
+- `--passphrase, -p`: Passphrase to decrypt private key
+- `--encoding, --enc`: Output encoding (default: hex)
+
+**Examples:**
+```bash
+# Sign a file with private key
+yarn run cli sign -i yarn.lock --priv .secrets/private.pem -p mypassphrase
+
+# Sign with different algorithm and encoding
+yarn run cli sign -i package.json --priv .secrets/private.pem -a RSA-SHA512 --enc base64 -p mypassphrase
+```
+
+### Verify a signature
+```bash
+yarn run cli verify -i <input_file> --pub <public_key> -s <signature> [options]
+```
+
+**Options:**
+- `--input, -i`: File to verify (required)
+- `--publicKey, --pub`: Public key file to verify against (required)
+- `--signature, -s`: Signature to verify (required)
+- `--algorithm, -a`: Signature algorithm (default: RSA-SHA256)
+- `--signatureEncoding, --se`: Signature encoding (default: hex)
+
+**Examples:**
+```bash
+# Verify signature (using your actual command)
+yarn run cli verify -i yarn.lock --pub .secrets/public.pem -s 477f73c6eb220d1853b85175f556fbcf9d74718ec1b3e2a82efd20d2b8813367e8ea31a715d884cfd79d9b598ad9479c8a197a6d2c196fbe4983fe0441f4995805a2a7a4731db517576b1e04097335166feaddbe67ea1fe9617e3f220e98950a230bfea5dfd7e7eb2dda7f979da2382ed77aae2aa9abb6efc1a9d0fa150186cfafa8458938bbe47fa7d7d6abb4ed7ab21efe239f2bbe8f109a5c1aaccbfbcc4596393be64068c2dbea78ee0c724b9f6c240be48e979dbb90e129578fd40c3f777b0e99c5fd47e1cf23836a470fdc8019a9f7828479245f6431292e38968ae1a9e02e351019a3eb48196d7b1a02b40d0808235a953b938728c2cf99eb59021b03
+
+# Verify with different algorithm
+yarn run cli verify -i document.txt --pub .secrets/public.pem -s <signature> -a RSA-SHA512
+```
+
 ## Features
 - AES encryption/decryption
 - Hashing
